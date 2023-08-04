@@ -34,13 +34,9 @@ services:
     ports:
         # SSH available on host machine port 2222 to avoid conflict. Change to suit
         - 2222:22
-        # Jupyter webserver
-        - 8888:8888
         # Rclone webserver for interactive configuration
         - 53682:53682
     environment:
         # Don't enclose values in quotes
         - WORKSPACE=/workspace/
-        #- JUPYTER_MODE=notebook
-        #- JUPYTER_TOKEN=password
     env_file: config/env.conf
