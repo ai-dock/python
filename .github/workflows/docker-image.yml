@@ -8,6 +8,9 @@ on:
 env:
   UBUNTU_VERSION: 22.04
   BUILDX_NO_DEFAULT_ATTESTATIONS: 1
+  LATEST_CUDA: "all-cuda-11.8.0-cudnn8-runtime-22.04"
+  LATEST_ROCM: "all-rocm-5.4.2-runtime-22.04"
+  LATEST_CPU: "all-cpu-22.04"
 
 jobs:
   ubuntu-base:
@@ -26,7 +29,6 @@ jobs:
         name: Env Setter
         run: |
           echo "PACKAGE_NAME=${GITHUB_REPOSITORY,,}" >> ${GITHUB_ENV}
-          echo "TAG=${{ matrix.python[0] }}-ubuntu-${{ env.UBUNTU_VERSION }}" >> ${GITHUB_ENV}
       -
         name: Checkout
         uses: actions/checkout@v3
@@ -38,20 +40,31 @@ jobs:
           username: ${{ github.actor }}
           password: ${{ secrets.GITHUB_TOKEN }}
       -
+        name: Set tags
+        run: |
+          img_path="ghcr.io/${{ env.PACKAGE_NAME }}"
+          ver_tag="${{ matrix.python[0] }}-cpu-${{ env.UBUNTU_VERSION }}"
+          
+          if [[ $ver_tag == ${{ env.LATEST_CPU }} ]]; then
+              TAGS="${img_path}:latest-cpu, ${img_path}:$ver_tag"
+          else
+              TAGS="${img_path}:$ver_tag"
+          fi
+          echo "TAGS=${TAGS}" >> ${GITHUB_ENV}
+      -
         name: Build and push
         uses: docker/build-push-action@v4
         with:
           context: build
           build-args: |
-            IMAGE_BASE=ghcr.io/ai-dock/base-image:ubuntu-${{ env.UBUNTU_VERSION }}
+            IMAGE_BASE=ghcr.io/ai-dock/base-image:cpu-${{ env.UBUNTU_VERSION }}
             PYTHON_VERSION=${{ matrix.python[0] }}
             PYTHON_MAMBA_NAME=${{ matrix.python[1] }}
             MAMBA_DEFAULT_ENV=${{ matrix.python[1] }}
           push: true
           # Avoids unknown/unknown architecture and extra metadata
           provenance: false
-          tags: |
-            ghcr.io/${{ env.PACKAGE_NAME }}:${{ env.TAG }}
+          tags: ${{ env.TAGS }}
     
   nvidia-base:
     runs-on: ubuntu-latest
@@ -85,7 +98,6 @@ jobs:
         name: Env Setter
         run: |
           echo "PACKAGE_NAME=${GITHUB_REPOSITORY,,}" >> ${GITHUB_ENV}
-          echo "TAG=${{ matrix.python[0] }}-cuda-${{ matrix.cuda }}-${{ matrix.level }}-${{ env.UBUNTU_VERSION }}" >> ${GITHUB_ENV}
       -
         name: Checkout
         uses: actions/checkout@v3
@@ -96,6 +108,18 @@ jobs:
           registry: ghcr.io
           username: ${{ github.actor }}
           password: ${{ secrets.GITHUB_TOKEN }}
+      -
+        name: Set tags
+        run: |
+          img_path="ghcr.io/${{ env.PACKAGE_NAME }}"
+          ver_tag="${{ matrix.python[0] }}-cuda-${{ matrix.cuda }}-${{ matrix.level }}-${{ env.UBUNTU_VERSION }}"
+          
+          if [[ $ver_tag == ${{ env.LATEST_CUDA }} ]]; then
+              TAGS="${img_path}:latest, ${img_path}:latest-cuda, ${img_path}:$ver_tag"
+          else
+              TAGS="${img_path}:$ver_tag"
+          fi
+          echo "TAGS=${TAGS}" >> ${GITHUB_ENV}
       -
         name: Build and push
         uses: docker/build-push-action@v4
@@ -108,8 +132,7 @@ jobs:
             MAMBA_DEFAULT_ENV=${{ matrix.python[1] }}
           push: true
           provenance: false
-          tags: |
-            ghcr.io/${{ env.PACKAGE_NAME }}:${{ env.TAG }}
+          tags: ${{ env.TAGS }}
 
   amd-base:
     runs-on: ubuntu-latest
@@ -134,7 +157,6 @@ jobs:
         name: Env Setter
         run: |
           echo "PACKAGE_NAME=${GITHUB_REPOSITORY,,}" >> ${GITHUB_ENV}
-          echo "TAG=${{ matrix.python[0] }}-rocm-${{ matrix.rocm }}-${{ matrix.level }}-${{ env.UBUNTU_VERSION }}" >> ${GITHUB_ENV}
       -
         name: Checkout
         uses: actions/checkout@v3
@@ -145,6 +167,18 @@ jobs:
           registry: ghcr.io
           username: ${{ github.actor }}
           password: ${{ secrets.GITHUB_TOKEN }}
+      -
+        name: Set tags
+        run: |
+          img_path="ghcr.io/${{ env.PACKAGE_NAME }}"
+          ver_tag="${{ matrix.python[0] }}-rocm-${{ matrix.rocm }}-${{ matrix.level }}-${{ env.UBUNTU_VERSION }}"
+          
+          if [[ $ver_tag == ${{ env.LATEST_ROCM }} ]]; then
+              TAGS="${img_path}:latest-rocm, ${img_path}:$ver_tag"
+          else
+              TAGS="${img_path}:$ver_tag"
+          fi
+          echo "TAGS=${TAGS}" >> ${GITHUB_ENV}
       -
         name: Build and push
         uses: docker/build-push-action@v4
@@ -157,5 +191,4 @@ jobs:
             MAMBA_DEFAULT_ENV=${{ matrix.python[1] }}
           push: true
           provenance: false
-          tags: |
-            ghcr.io/${{ env.PACKAGE_NAME }}:${{ env.TAG }}
+          tags: ${{ env.TAGS }}
