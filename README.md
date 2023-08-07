@@ -73,7 +73,7 @@ __Container Cloud__
 
 Container providers don't give you access to the docker host but are quick and easy to set up. They are often inexpensive when compared to a full VM or bare metal solution.
 
-All images built for ai-dock are tested for compatibility with both [vast.ai](https://cloud.vast.ai/?ref_id=62897) and [runpod.io](https://runpod.io/gsc?ref=m0vk9g4f).
+All images built for ai-dock are tested for compatibility with both [vast.ai](https://cloud.vast.ai/?ref_id=62897&template_id=9e77e63cfa451d7590b24400f159a193) and [runpod.io](https://runpod.io/gsc?template=2dp60h581h&ref=m0vk9g4f).
 
 See a list of pre-configured templates [here](#pre-configured-templates)
 
@@ -266,11 +266,15 @@ Some ports need to be exposed for the services to run or for certain features of
 
 **Vast.​ai**
 
-[Python (All versions)](#todo)
+[python:latest](https://cloud.vast.ai/?ref_id=62897&template_id=9e77e63cfa451d7590b24400f159a193)
+
+---
 
 **Runpod.​io**
 
-[Python (All versions)](#todo)
+[python:latest](https://runpod.io/gsc?template=2dp60h581h&ref=m0vk9g4f)
+
+---
 
 >[!NOTE]  
 >These templates are configured to use Python `all` with the `latest` tag but you are free to change to any of the available Python CUDA tags listed [here](https://github.com/ai-dock/python/pkgs/container/python)
