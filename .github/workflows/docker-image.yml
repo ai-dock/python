@@ -16,6 +16,7 @@ jobs:
   cpu-base:
     runs-on: ubuntu-latest
     strategy:
+      fail-fast: false
       matrix:
         python:
           - ["2.7", "python_27"]
@@ -60,7 +61,6 @@ jobs:
             IMAGE_BASE=ghcr.io/ai-dock/base-image:cpu-${{ env.UBUNTU_VERSION }}
             PYTHON_VERSION=${{ matrix.python[0] }}
             PYTHON_MAMBA_NAME=${{ matrix.python[1] }}
-            MAMBA_DEFAULT_ENV=${{ matrix.python[1] }}
           push: true
           # Avoids unknown/unknown architecture and extra metadata
           provenance: false
@@ -130,7 +130,6 @@ jobs:
             IMAGE_BASE=ghcr.io/ai-dock/base-image:cuda-${{ matrix.cuda }}-${{ matrix.level }}-${{ env.UBUNTU_VERSION }}
             PYTHON_VERSION=${{ matrix.python[0] }}
             PYTHON_MAMBA_NAME=${{ matrix.python[1] }}
-            MAMBA_DEFAULT_ENV=${{ matrix.python[1] }}
           push: true
           provenance: false
           tags: ${{ env.TAGS }}
@@ -190,7 +189,6 @@ jobs:
             IMAGE_BASE=ghcr.io/ai-dock/base-image:rocm-${{ matrix.rocm }}-${{ matrix.level }}-${{ env.UBUNTU_VERSION }}
             PYTHON_VERSION=${{ matrix.python[0] }}
             PYTHON_MAMBA_NAME=${{ matrix.python[1] }}
-            MAMBA_DEFAULT_ENV=${{ matrix.python[1] }}
           push: true
           provenance: false
           tags: ${{ env.TAGS }}

@@ -36,6 +36,7 @@ Tags follow these patterns:
 - `:[python-version]-cuda-[x.x.x]{-cudnn[x]}-[base|runtime|devel]-[ubuntu-version]`
 
 - `:latest-cuda` -> `:all-cuda-11.8.0-cudnn8-runtime-22.04`
+
 ##### _ROCm_
 - `:[python-version]-rocm-[x.x.x]-[core|runtime|devel]-[ubuntu-version]`
 
@@ -277,7 +278,7 @@ Some ports need to be exposed for the services to run or for certain features of
 ---
 
 >[!NOTE]  
->These templates are configured to use Python `all` with the `latest` tag but you are free to change to any of the available Python CUDA tags listed [here](https://github.com/ai-dock/python/pkgs/container/python)
+>These templates are configured to use the `latest` tag but you are free to change to any of the available Python CUDA tags listed [here](https://github.com/ai-dock/python/pkgs/container/python)
 
 ## Compatible VM Providers
 

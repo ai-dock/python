@@ -8,7 +8,6 @@ services:
         IMAGE_BASE: ${IMAGE_BASE}
         PYTHON_VERSION: ${PYTHON_VERSION}
         PYTHON_MAMBA_NAME: ${PYTHON_MAMBA_NAME}
-        MAMBA_DEFAULT_ENV:  ${PYTHON_MAMBA_NAME}
       tags:
         - "ghcr.io/ai-dock/python:${IMAGE_TAG}"
         

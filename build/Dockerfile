@@ -14,12 +14,13 @@ LABEL maintainer="Rob Ballantyne <rob@dynamedia.uk>"
 # Copy early so we can use scripts in the build - Changes to these files will invalidate the cache and cause a rebuild.
 COPY ./COPY_ROOT/ /
 
-# Define the startup mamba environment for interactive sessions
-ARG MAMBA_DEFAULT_ENV=system
-ENV MAMBA_DEFAULT_ENV=${MAMBA_DEFAULT_ENV}
-
-ARG PYTHON_VERSION
-ARG PYTHON_MAMBA_NAME
+# Define the startup mamba environment for interactive sessions.
+# ENV for inheritance
+ARG PYTHON_VERSION=all
+ENV PYTHON_VERSION=${PYTHON_VERSION}
+ARG PYTHON_MAMBA_NAME=python_311
+ENV PYTHON_MAMBA_NAME=${PYTHON_MAMBA_NAME}
+ENV MAMBA_DEFAULT_ENV=${PYTHON_MAMBA_NAME}
 
 # Use build scripts to ensure we can build all targets from one Dockerfile in a single layer.
 # Don't put anything heavy in here - We can use multi-stage building above if necessary.
