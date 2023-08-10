@@ -1,3 +1,5 @@
+[![Docker Build](https://github.com/ai-dock/python/actions/workflows/docker-build.yml/badge.svg)](https://github.com/ai-dock/python/actions/workflows/docker-build.yml)
+
 # Python
 
 Run python in a container. Nothing is added to the installed python environment(s) - You'll have python & pip.
