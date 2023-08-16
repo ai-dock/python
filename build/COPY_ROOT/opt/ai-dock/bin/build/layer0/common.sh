@@ -8,7 +8,7 @@ main() {
 }
 
 do_mamba_install() {
-    $MAMBA_CREATE -n "$1" python="$2"
+    $MAMBA_CREATE -n "$1" -c conda-forge python="$2"
 }
 
 install_python() {
