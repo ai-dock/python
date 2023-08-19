@@ -26,10 +26,12 @@ Due to these advantages, Python has become the preferred language for AI and mac
 
 ## Pre-built Images
 
-Docker images are built automatically through a GitHub Actions workflow and hosted at the GitHub Container Registry. An incremental build process is used to avoid needing a huge cache - The following images are used to provide functionality:
+Docker images are built automatically through a GitHub Actions workflow and hosted at the GitHub Container Registry. 
 
-- [nvidia/cuda](https://github.com/NVIDIA/nvidia-docker) / [ubuntu](https://github.com/docker-library/docs/tree/master/ubuntu) ->
-- [ai-dock/base-image](https://github.com/ai-dock/base-image) ->
+An incremental build process is used to avoid needing a huge cache - The following images are used to provide functionality:
+
+- [nvidia/cuda](https://github.com/NVIDIA/nvidia-docker) / [ubuntu](https://github.com/docker-library/docs/tree/master/ubuntu) &#8628;
+- [ai-dock/base-image](https://github.com/ai-dock/base-image) &#8628;
 - ai-dock/python
 
 #### Version Tags
@@ -41,19 +43,19 @@ Tags follow these patterns:
 ##### _CUDA_
 - `:[python-version]-cuda-[x.x.x]{-cudnn[x]}-[base|runtime|devel]-[ubuntu-version]`
 
-- `:latest-cuda` -> `:all-cuda-11.8.0-cudnn8-runtime-22.04`
+- `:latest-cuda` &rarr; `:all-cuda-11.8.0-cudnn8-runtime-22.04`
 
 ##### _ROCm_
 - `:[python-version]-rocm-[x.x.x]-[core|runtime|devel]-[ubuntu-version]`
 
-- `:latest-rocm` -> `:all-rocm-5.4.2-runtime-22.04`
+- `:latest-rocm` &rarr; `:all-rocm-5.4.2-runtime-22.04`
 
 ROCm builds are experimental. Please give feedback.
 
 ##### _CPU_
 - `:[python-version]-cpu-[ubuntu-version]`
 
-- `:latest-cpu` -> `:all-cpu-22.04`
+- `:latest-cpu` &rarr; `:all-cpu-22.04`
 
 Browse [here](https://github.com/ai-dock/python/pkgs/container/python) for an image suitable for your target environment.
 
