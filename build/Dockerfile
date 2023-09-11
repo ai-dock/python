@@ -22,7 +22,7 @@ ARG PYTHON_MAMBA_NAME=python_311
 ENV PYTHON_MAMBA_NAME=${PYTHON_MAMBA_NAME}
 ENV MAMBA_DEFAULT_ENV=${PYTHON_MAMBA_NAME}
 ENV MAMBA_DEFAULT_RUN="micromamba run -n $MAMBA_DEFAULT_ENV"
-
+ENV IMAGE_SLUG="python"
 # Use build scripts to ensure we can build all targets from one Dockerfile in a single layer.
 # Don't put anything heavy in here - We can use multi-stage building above if necessary.
 RUN /opt/ai-dock/bin/build/layer0/init.sh
