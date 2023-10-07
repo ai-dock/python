@@ -132,6 +132,9 @@ You can use the included `cloudflared` service to make secure connections withou
 | `SKIP_ACL`            | Set `true` to skip modifying workspace ACL |
 | `SSH_PORT`            | Set a non-standard port for SSH (default `22`) |
 | `SSH_PUBKEY`          | Your public key for SSH |
+| `WEB_ENABLE_AUTH`     | Enable password protection for web services (default `true`) |
+| `WEB_USER`            | Username for web services (default `user`) |
+| `WEB_PASSWORD`        | Password for web services (default `password`) |
 | `WORKSPACE`           | A volume path. Defaults to `/workspace/` |
 
 Environment variables can be specified by using any of the standard methods (`docker-compose.yaml`, `docker run -e...`). Additionally, environment variables can also be passed as parameters of `init.sh`.
@@ -139,6 +142,18 @@ Environment variables can be specified by using any of the standard methods (`do
 Passing environment variables to init.sh is usually unnecessary, but is useful for some cloud environments where the full `docker run` command cannot be specified.
 
 Example usage: `docker run -e STANDARD_VAR1="this value" -e STANDARD_VAR2="that value" init.sh EXTRA_VAR="other value"`
+
+## Security
+
+By default, all exposed web services other than the port redirect page are protected by HTTP basic authentication.
+
+The default username is `user` and the password is `password`.
+
+You can set your credentials by passing environment variables as shown above.
+
+The password is stored as a bcrypt hash. If you prefer not to pass a plain text password to the container you can pre-hash and use the variable `WEB_PASSWORD_HASH`.
+
+If you are running the image locally on a trusted network, you may disable authentication by setting the environment variable `WEB_ENABLE_AUTH=false`.
 
 ## Provisioning script
 
@@ -151,7 +166,7 @@ The URL must point to a plain text file - GitHub Gists/Pastebin (raw) are suitab
 If you are running locally you may instead opt to mount a script at `/opt/ai-dock/bin/provisioning.sh`.
 
 >[!NOTE]  
->If configured, `sshd`, `cloudflared`, `rclone` & `logtail` will be launched before provisioning; Any other processes will launch after.
+>If configured, `sshd`, `caddy`, `cloudflared`, `rclone`, `port redirector` & `logtail` will be launched before provisioning; Any other processes will launch after.
 
 >[!WARNING]  
 >Only use scripts that you trust and which cannot be changed without your consent.
@@ -169,8 +184,6 @@ Micromamba environments are particularly useful where several software packages 
 | Environment    | Packages |
 | -------------- | ----------------------------------------- |
 | `base`         | micromamba's base environment |
-| `system`       | `supervisord`, `openssh`, `rclone` |
-| `fastapi`      | `logtail web UI`, `port redirector web UI` |
 | `python_[ver]` | `python` |
 
 If you are extending this image or running an interactive session where additional software is required, you should almost certainly create a new environment first. See below for guidance.
@@ -216,6 +229,12 @@ All processes are managed by [supervisord](https://supervisord.readthedocs.io/en
 
 >[!NOTE]  
 >*Some of the included services would not normally be found **inside** of a container. They are, however, necessary here as some cloud providers give no access to the host; Containers are deployed as if they were a virtual machine.*
+
+### Caddy
+
+This is a simple webserver acting as a reverse proxy.
+
+Caddy is used to enable basic authentication for all sensitive web services.
 
 ### Port Redirector
 
