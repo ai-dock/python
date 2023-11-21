@@ -5,13 +5,22 @@ services:
     build:
       context: ./build
       args:
-        IMAGE_BASE: ${IMAGE_BASE}
-        PYTHON_VERSION: ${PYTHON_VERSION}
-        PYTHON_MAMBA_NAME: ${PYTHON_MAMBA_NAME}
+        IMAGE_BASE: ${IMAGE_BASE:-ghcr.io/ai-dock/base-image:cuda-11.8.0-base-22.04}
+        PYTHON_VERSION: ${PYTHON_VERSION:-all}
+        PYTHON_MAMBA_NAME: ${PYTHON_MAMBA_NAME:-python_310}
       tags:
-        - "ghcr.io/ai-dock/python:${IMAGE_TAG}"
+        - "ghcr.io/ai-dock/python:${IMAGE_TAG:-all-cuda-11.8.0-base-22.04}"
         
-    image: ghcr.io/ai-dock/python:${IMAGE_TAG}
+    image: ghcr.io/ai-dock/python:${IMAGE_TAG:-all-cuda-11.8.0-base-22.04}
+    
+    ## For Nvidia GPU's - You probably want to uncomment this
+    #deploy:
+    #  resources:
+    #    reservations:
+    #      devices:
+    #        - driver: nvidia
+    #          count: all
+    #          capabilities: [gpu]
     
     security_opt:
       # For Rclone mount
@@ -51,15 +60,14 @@ services:
         # SSH available on host machine port 2222 to avoid conflict. Change to suit
         - ${SSH_PORT_HOST:-2222}:${SSH_PORT:-22}
         # Web UI for easy service access
-        - ${REDIRECTOR_PORT_HOST:-1111}:1111
-        # Websocket log viewer
-        - ${LOG_VIEWER_PORT_HOST:-1122}:1122
+        - ${SERVICEPORTAL_PORT_HOST:-1111}:1111
         # Rclone webserver for interactive configuration
         - ${RCLONE_PORT_HOST:-53682}:53682
    
     environment:
         # Don't enclose values in quotes
-        # Allows running true SSH alongside provider proxy SSH
+        - DIRECT_ADDRESS=${DIRECT_ADDRESS:-127.0.0.1}
+        - DIRECT_ADDRESS_GET_WAN=${DIRECT_ADDRESS_GET_WAN:-false}
         - WORKSPACE=${WORKSPACE:-/workspace}
         - WORKSPACE_SYNC=${WORKSPACE_SYNC:-true}
         - CF_TUNNEL_TOKEN=${CF_TUNNEL_TOKEN:-}
