@@ -59,7 +59,7 @@ ROCm builds are experimental. Please give feedback.
 
 Browse [here](https://github.com/ai-dock/python/pkgs/container/python) for an image suitable for your target environment.
 
-Supported Python versions: `all` `3.11`, `3.10`, `3.9`, `3.8`, `2.7`
+Supported Python versions: `all`, `3.12`, `3.11`, `3.10`, `3.9`, `3.8`, `2.7`
 
 Supported Platforms: `NVIDIA CUDA`, `AMD ROCm`, `CPU`
 
