@@ -21,6 +21,7 @@ install_python() {
         do_mamba_install "python_39" "3.9"
         do_mamba_install "python_310" "3.10"
         do_mamba_install "python_311" "3.11"
+        do_mamba_install "python_312" "3.12"
     fi
 }
 

@@ -24,7 +24,8 @@ jobs:
           - ["3.9", "python_39"]
           - ["3.10", "python_310"]
           - ["3.11", "python_311"]
-          - ["all", "python_311"]
+          - ["3.12", "python_312"]
+          - ["all", "python_310"]
     steps:
       -
         name: Free Space
@@ -86,7 +87,8 @@ jobs:
           - ["3.9", "python_39"]
           - ["3.10", "python_310"]
           - ["3.11", "python_311"]
-          - ["all", "python_311"]
+          - ["3.12", "python_312"]
+          - ["all", "python_310"]
         cuda:
           - 11.7.1
           - 11.8.0
@@ -163,7 +165,8 @@ jobs:
           - ["3.9", "python_39"]
           - ["3.10", "python_310"]
           - ["3.11", "python_311"]
-          - ["all", "python_311"]
+          - ["3.12", "python_312"]
+          - ["all", "python_310"]
         rocm:
           - 5.4.2
           - 5.6
