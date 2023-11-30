@@ -71,6 +71,10 @@ It is a good idea to leave the source tree alone and copy any edits you would li
 
 As this overlaying happens after the main build, it is easy to add extra files such as ML models and datasets to your images. You will also be able to rebuild quickly if your file overrides are made here.
 
+Any directories and files that you add into `opt/storage` will be made available in the running container at `$WORKSPACE/storage`.  
+
+This directory is monitored by `inotifywait`. Any items appearing in this directory will be automatically linked to the application directories as defined in `/opt/ai-dock/storage_monitor/etc/mappings.sh`.  This is particularly useful if you need to run several applications that each need to make use of the stored files.
+
 ## Run Locally
 
 A 'feature-complete' `docker-compose.yaml` file is included for your convenience. All features of the image are included - Simply edit the environment variables in `.env`, save and then type `docker compose up`.
@@ -138,12 +142,13 @@ You can use the included `cloudflared` service to make secure connections withou
 | `PROVISIONING_SCRIPT`    | URL of a remote script to execute on init. See [note](#provisioning-script). |
 | `RCLONE_*`               | Rclone configuration - See [rclone documentation](https://rclone.org/docs/#config-file) |
 | `SKIP_ACL`               | Set `true` to skip modifying workspace ACL |
-| `SSH_PORT`               | Set a non-standard port for SSH (default `22`) |
+| `SSH_PORT_LOCAL`         | Set a non-standard port for SSH (default `22`) |
 | `SSH_PUBKEY`             | Your public key for SSH |
 | `WEB_ENABLE_AUTH`        | Enable password protection for web services (default `true`) |
 | `WEB_USER`               | Username for web services (default `user`) |
 | `WEB_PASSWORD`           | Password for web services (default `password`) |
 | `WORKSPACE`              | A volume path. Defaults to `/workspace/` |
+| `WORKSPACE_SYNC`         | Move mamba environments and services to workspace if mounted (default `true`) |
 
 Environment variables can be specified by using any of the standard methods (`docker-compose.yaml`, `docker run -e...`). Additionally, environment variables can also be passed as parameters of `init.sh`.
 
@@ -333,6 +338,10 @@ This script follows and prints the log files for each of the above services to s
 
 If you are logged into the container you can follow the logs by running `logtail.sh` in your shell.
 
+### Storage Monitor
+
+This service detects changes to files in `$WORKSPACE/storage` and creates symbolic links to the application directories defined in `/opt/ai-dock/storage_monitor/etc/mappings.sh`
+
 ## Open Ports
 
 Some ports need to be exposed for the services to run or for certain features of the provided software to function
@@ -341,7 +350,7 @@ Some ports need to be exposed for the services to run or for certain features of
 | Open Port             | Service / Description     |
 | --------------------- | ------------------------- |
 | `22`                  | SSH server                |
-| `1111`                | Port redirector web UI    |
+| `1111`                | Service portal web UI     |
 | `53682`               | Rclone interactive config |
 
 ## Pre-Configured Templates
