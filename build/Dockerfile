@@ -18,7 +18,7 @@ COPY ./COPY_ROOT/ /
 # ENV for inheritance
 ARG PYTHON_VERSION=all
 ENV PYTHON_VERSION=${PYTHON_VERSION}
-ARG PYTHON_MAMBA_NAME=python_311
+ARG PYTHON_MAMBA_NAME=python_312
 ENV PYTHON_MAMBA_NAME=${PYTHON_MAMBA_NAME}
 ENV MAMBA_DEFAULT_ENV=${PYTHON_MAMBA_NAME}
 ENV MAMBA_DEFAULT_RUN="micromamba run -n $MAMBA_DEFAULT_ENV"
@@ -26,10 +26,12 @@ ENV OPT_SYNC=$OPT_SYNC
 ENV IMAGE_SLUG="python"
 # Use build scripts to ensure we can build all targets from one Dockerfile in a single layer.
 # Don't put anything heavy in here - We can use multi-stage building above if necessary.
-RUN /opt/ai-dock/bin/build/layer0/init.sh | tee /var/log/build.log
 
-# Copy overrides and new files into a final layer for fast rebuilds
-COPY ./COPY_ROOT_EXTRA/ /
+RUN set -eo pipefail && /opt/ai-dock/bin/build/layer0/init.sh | tee /var/log/build.log
+
+# Copy overrides and new files into a final layer for fast rebuilds. Uncomment below
+#COPY ./COPY_ROOT_EXTRA/ /
+#RUN set -eo pipefail && /opt/ai-dock/bin/build/layer1/init.sh | tee -a /var/log/build.log
 
 # Keep init.sh as-is and place additional logic in /opt/ai-dock/bin/preflight.sh
 CMD ["init.sh"]
