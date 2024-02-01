@@ -182,7 +182,7 @@ The URL must point to a plain text file - GitHub Gists/Pastebin (raw) are suitab
 If you are running locally you may instead opt to mount a script at `/opt/ai-dock/bin/provisioning.sh`.
 
 >[!NOTE]  
->If configured, `sshd`, `caddy`, `cloudflared`, `rclone`, `serviceportal`, `storagemonitor` & `logtail` will be launched before provisioning; Any other processes will launch after.
+>If configured, `sshd`, `caddy`, `cloudflared`, `serviceportal`, `storagemonitor` & `logtail` will be launched before provisioning; Any other processes will launch after.
 
 >[!WARNING]  
 >Only use scripts that you trust and which cannot be changed without your consent.
@@ -305,32 +305,6 @@ See [this guide](https://link.ai-dock.org/guide-sshd-do) by DigitalOcean for an 
 >[!NOTE]  
 >_SSHD is included because the end-user should be able to know the version prior to deloyment. Using a providers add-on, if available, does not guarantee this._
 
-### Rclone mount
-
-Rclone allows you to access your cloud storage from within the container by configuring one or more remotes. If you are unfamiliar with the project you can find out more at the [Rclone website](https://rclone.org/).
-
-Any Rclone remotes that you have specified, either through mounting the config directory or via setting environment variables will be mounted at `/workspace/remote/[remote name]`. For this service to start, the following conditions must be met:
-
-- Fuse3 installed in the host operating system
-- Kernel module `fuse` loaded in the host
-- Host `/etc/passwd` mounted in the container
-- Host `/etc/group` mounted in the container
-- Host device `/dev/fuse` made available to the container
-- Container must run with `cap-add SYS_ADMIN`
-- Container must run with `securiry-opt apparmor:unconfined`
-- At least one remote must be configured
-
-The provided docker-compose.yaml includes a working configuration (add your own remotes).
-
-In the event that the conditions listed cannot be met, `rclone` will still be available to use via the CLI - only mounts will be unavailable.
-
-If you intend to use the `rclone create` command to interactively generate remote configurations you should ensure port `53682` is accessible. See https://rclone.org/remote_setup/ for further details.
-
->[!NOTE]  
->_Rclone is included to give the end-user an opportunity to easily transfer files between the instance and their cloud storage provider._
-
->[!WARNING]  
->You should only provide auth tokens in secure cloud environments.
 
 ### Logtail
 

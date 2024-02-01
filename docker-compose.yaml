@@ -22,16 +22,6 @@ services:
     #          count: all
     #          capabilities: [gpu]
     
-    security_opt:
-      # For Rclone mount
-      - apparmor:unconfined
-      # For AMD GPU
-      #- seccomp:unconfined
-    
-    cap_add:
-      # For Rclone mount
-      - SYS_ADMIN
-    
     devices:
       # For Rclone mount
       - "/dev/fuse:/dev/fuse"
@@ -45,10 +35,6 @@ services:
     #  - render
     
     volumes:
-      # For Rclone mount
-      - /etc/passwd:/etc/passwd:ro
-      - /etc/group:/etc/group:ro
-      - ./config/rclone:/etc/rclone
       # Workspace
       - ./workspace:${WORKSPACE:-/workspace}:rshared
       # Will echo to root-owned authorized_keys file;
