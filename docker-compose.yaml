@@ -23,16 +23,9 @@ services:
     #          capabilities: [gpu]
     
     devices:
-      # For Rclone mount
-      - "/dev/fuse:/dev/fuse"
+      - "/dev/dri:/dev/dri"
       # For AMD GPU
       #- "/dev/kfd:/dev/kfd"
-      #- "/dev/dri:/dev/dri"
-      
-    # For AMD GPU
-    #group_add:
-    #  - video
-    #  - render
     
     volumes:
       # Workspace
