@@ -46,7 +46,7 @@ Tags follow these patterns:
 - `:latest-cuda` &rarr; `:3.12-cuda-12.2.0-cudnn8-runtime-22.04`
 
 ##### _ROCm_
-- `:[python-version]-rocm-[x.x.x]-[core|runtime|devel]-[ubuntu-version]`
+- `:[python-version]-rocm-[x.x.x]-[core|runtime]-[ubuntu-version]`
 
 - `:latest-rocm` &rarr; `:3.12-rocm-5.6-runtime-22.04`
 
@@ -142,8 +142,8 @@ You can use the included `cloudflared` service to make secure connections withou
 | `PROVISIONING_SCRIPT`    | URL of a remote script to execute on init. See [note](#provisioning-script). |
 | `RCLONE_*`               | Rclone configuration - See [rclone documentation](https://rclone.org/docs/#config-file) |
 | `SSH_PUBKEY`             | Your public key for SSH |
-| `USER_NAME`              | System acount username (default `user`)|
-| `USER_PASSWORD`          | System acount username (default `password`)|
+| `USER_NAME`              | System account username (default `user`)|
+| `USER_PASSWORD`          | System account username (default `password`)|
 | `WEB_ENABLE_AUTH`        | Enable password protection for web services (default `true`) |
 | `WEB_USER`               | Username for web services (default `user`) |
 | `WEB_PASSWORD`           | Password for web services (default `auto generated`) |
