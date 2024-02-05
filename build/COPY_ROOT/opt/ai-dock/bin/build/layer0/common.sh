@@ -8,6 +8,7 @@ build_common_main() {
 
 build_common_do_mamba_install() {
     $MAMBA_CREATE -n "$1" python="$2"
+    printf "/opt/micromamba/envs/%s/lib\n" "$1" >> /etc/ld.so.conf.d/micromamba.conf
 }
 
 build_common_install_python() {

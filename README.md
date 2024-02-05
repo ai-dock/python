@@ -141,14 +141,14 @@ You can use the included `cloudflared` service to make secure connections withou
 | `GPU_COUNT`              | Limit the number of available GPUs |
 | `PROVISIONING_SCRIPT`    | URL of a remote script to execute on init. See [note](#provisioning-script). |
 | `RCLONE_*`               | Rclone configuration - See [rclone documentation](https://rclone.org/docs/#config-file) |
-| `SKIP_ACL`               | Set `true` to skip modifying workspace ACL |
-| `SSH_PORT_LOCAL`         | Set a non-standard port for SSH (default `22`) |
 | `SSH_PUBKEY`             | Your public key for SSH |
+| `USER_NAME`              | System acount username (default `user`)|
+| `USER_PASSWORD`          | System acount username (default `password`)|
 | `WEB_ENABLE_AUTH`        | Enable password protection for web services (default `true`) |
 | `WEB_USER`               | Username for web services (default `user`) |
-| `WEB_PASSWORD`           | Password for web services (default `password`) |
+| `WEB_PASSWORD`           | Password for web services (default `auto generated`) |
 | `WORKSPACE`              | A volume path. Defaults to `/workspace/` |
-| `WORKSPACE_SYNC`         | Move mamba environments and services to workspace if mounted (default `true`) |
+| `WORKSPACE_SYNC`         | Move mamba environments and services to workspace if mounted (default `false`) |
 
 Environment variables can be specified by using any of the standard methods (`docker-compose.yaml`, `docker run -e...`). Additionally, environment variables can also be passed as parameters of `init.sh`.
 
@@ -158,18 +158,32 @@ Example usage: `docker run -e STANDARD_VAR1="this value" -e STANDARD_VAR2="that 
 
 ## Security
 
-By default, all exposed web services other than the port redirect page are protected by HTTP basic authentication.
+All ai-dock containers are interactive and will not drop root privileges. You should ensure that your docker daemon runs as an unprivileged user.
 
-The default username is `user` and the password is `password`.
+### System
+
+A system user will be created at startup. The UID will be either 1000 or will match the UID of the `$WORKSPACE` bind mount.
+
+The user will share the root user's ssh public key.
+
+Some processes may start in the user context for convenience only.
+
+### Web Services
+
+By default, all exposed web services are protected by a single login form at `:1111/login`.
+
+The default username is `user` and the password is auto generated unless you have passed a value in the environment variable `WEB_PASSWORD`. To find the auto-generated password and related tokens you should type `env | grep WEB_` from inside the container.
 
 You can set your credentials by passing environment variables as shown above.
 
-The password is stored as a bcrypt hash. If you prefer not to pass a plain text password to the container you can pre-hash and use the variable `WEB_PASSWORD_HASH`.
-
 If you are running the image locally on a trusted network, you may disable authentication by setting the environment variable `WEB_ENABLE_AUTH=false`.
 
+If you need to connect programmatically to the web services you can authenticate using either `Bearer $WEB_TOKEN` or `Basic $WEB_PASSWORD_B64`.
+
+The security measures included aim to be as secure as basic authentication, i.e. not secure without HTTPS.  Please use the provided cloudflare connections wherever possible.
+
 >[!NOTE]  
->You can use `set-web-credentials.sh <username> <password>` change the username and password in a running container.
+>You can use `set-web-credentials.sh <username> <password>` to change the username and password in a running container.
 
 ## Provisioning script
 
@@ -234,8 +248,6 @@ The provided docker-compose.yaml will mount the local directory `./workspace` at
 As docker containers generally run as the root user, new files created in /workspace will be owned by uid 0(root).
 
 To ensure that the files remain accessible to the local user that owns the directory, the docker entrypoint will set a default ACL on the directory by executing the commamd `setfacl -d -m u:${WORKSPACE_UID}:rwx /workspace`.
-
-If you do not want this, you can set the environment variable `SKIP_ACL=true`.
 
 ## Running Services
 
