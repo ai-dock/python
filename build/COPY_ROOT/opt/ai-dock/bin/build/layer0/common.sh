@@ -4,6 +4,7 @@ source /opt/ai-dock/etc/environment.sh
 
 build_common_main() {
     build_common_install_python
+    ldconfig -p
 }
 
 build_common_do_mamba_install() {
