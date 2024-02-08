@@ -43,12 +43,12 @@ Tags follow these patterns:
 ##### _CUDA_
 - `:[python-version]-cuda-[x.x.x]-[base|runtime|devel]-[ubuntu-version]`
 
-- `:latest-cuda` &rarr; `:3.12-cuda-12.2.0-runtime-22.04`
+- `:latest-cuda` &rarr; `:3.12-cuda-12.3.1-runtime-22.04`
 
 ##### _ROCm_
 - `:[python-version]-rocm-[x.x.x]-[core|runtime]-[ubuntu-version]`
 
-- `:latest-rocm` &rarr; `:3.12-rocm-5.6-runtime-22.04`
+- `:latest-rocm` &rarr; `:3.12-rocm-6.0.2-runtime-22.04`
 
 ROCm builds are experimental. Please give feedback.
 
