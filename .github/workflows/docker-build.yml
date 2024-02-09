@@ -163,7 +163,7 @@ jobs:
         level:
           - "core"
           - "runtime"
-          #- "devel"
+          - "devel"
     steps:
       -
         name: Free Space
