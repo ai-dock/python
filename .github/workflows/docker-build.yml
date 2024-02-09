@@ -28,10 +28,12 @@ jobs:
         name: Free Space
         run: |
           df -h
-          rm -rf /usr/share/dotnet
-          rm -rf /opt/ghc
-          rm -rf /usr/local/share/boost
-          rm -rf "$AGENT_TOOLSDIRECTORY"
+          sudo rm -rf /usr/share/dotnet
+          sudo rm -rf /opt/ghc
+          sudo rm -rf /usr/local/.ghcup
+          sudo rm -rf /usr/local/share/boost
+          sudo rm -rf /usr/local/lib/android
+          sudo rm -rf "$AGENT_TOOLSDIRECTORY"
           df -h
       -
         name: Env Setter
@@ -97,10 +99,12 @@ jobs:
         name: Free Space
         run: |
           df -h
-          rm -rf /usr/share/dotnet
-          rm -rf /opt/ghc
-          rm -rf /usr/local/share/boost
-          rm -rf "$AGENT_TOOLSDIRECTORY"
+          sudo rm -rf /usr/share/dotnet
+          sudo rm -rf /opt/ghc
+          sudo rm -rf /usr/local/.ghcup
+          sudo rm -rf /usr/local/share/boost
+          sudo rm -rf /usr/local/lib/android
+          sudo rm -rf "$AGENT_TOOLSDIRECTORY"
           df -h
       -
         name: Env Setter
@@ -159,16 +163,18 @@ jobs:
         level:
           - "core"
           - "runtime"
-          #- "devel"
+          - "devel"
     steps:
       -
         name: Free Space
         run: |
           df -h
-          rm -rf /usr/share/dotnet
-          rm -rf /opt/ghc
-          rm -rf /usr/local/share/boost
-          rm -rf "$AGENT_TOOLSDIRECTORY"
+          sudo rm -rf /usr/share/dotnet
+          sudo rm -rf /opt/ghc
+          sudo rm -rf /usr/local/.ghcup
+          sudo rm -rf /usr/local/share/boost
+          sudo rm -rf /usr/local/lib/android
+          sudo rm -rf "$AGENT_TOOLSDIRECTORY"
           df -h
       -
         name: Env Setter
