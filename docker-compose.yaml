@@ -43,8 +43,6 @@ services:
         # Syncthing
         - ${SYNCTHING_UI_PORT_HOST:-8384}:${SYNCTHING_UI_PORT_HOST:-8384}
         - ${SYNCTHING_TRANSPORT_PORT_HOST:-22999}:${SYNCTHING_TRANSPORT_PORT_HOST:-22999}
-        # Rclone webserver for interactive configuration
-        - ${RCLONE_PORT_HOST:-53682}:${RCLONE_PORT_HOST:-53682}
    
     environment:
         # Don't enclose values in quotes

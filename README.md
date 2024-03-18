@@ -340,8 +340,8 @@ Some ports need to be exposed for the services to run or for certain features of
 | --------------------- | ------------------------- |
 | `22`                  | SSH server                |
 | `1111`                | Service portal web UI     |
-| `8384`                | Syncthing UI |
-| `22999`               | Syncthing TCP Transport |
+| `8384`                | Syncthing UI              |
+| `22999`               | Syncthing TCP Transport   |
 
 ## Pre-Configured Templates
 
