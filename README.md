@@ -6,11 +6,12 @@ Run python in a cloud-first AI-Dock container. Nothing is added to the installed
 
 This image provides a great starting point for python development when used standalone but its also a solid foundation for extending upon.
 
+
 ## Documentation
 
 All AI-Dock containers share a common base which is designed to make running on cloud services such as [vast.ai](https://link.ai-dock.org/vast.ai) and [runpod.io](https://link.ai-dock.org/template) as straightforward and user friendly as possible.
 
-Common features and options are documented in the [base wiki](https://github.com/ai-dock/base-image/wiki) but any additional features common to this image will be detailed below.
+Common features and options are documented in the [base wiki](https://github.com/ai-dock/base-image/wiki) but any additional features unique to this image will be detailed below.
 
 
 ## Version Tags
@@ -41,15 +42,6 @@ Browse [here](https://github.com/ai-dock/python/pkgs/container/python) for an im
 Supported Python versions: `3.12`, `3.11`, `3.10`
 
 Supported Platforms: `NVIDIA CUDA`, `AMD ROCm`, `CPU`
-
-
-## Aditional Micromamba Environments
-
-These environments are included alongside the [defaults](https://github.com/ai-dock/base-image/wiki/1.0-Included-Software#installed-micromamba-environments).
-
-| Environment    | Packages |
-| -------------- | ----------------------------------------- |
-| `python_[ver]` | `python` |
 
 
 ## Pre-Configured Templates
