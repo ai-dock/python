@@ -1,0 +1,4 @@
+#!/bin/bash
+
+# Some very hacky nonsense to make jupyter source the .bashrc. FIXME
+bash

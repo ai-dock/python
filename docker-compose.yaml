@@ -40,6 +40,8 @@ services:
         - ${SSH_PORT_HOST:-2222}:22
         # Web UI for easy service access
         - ${SERVICEPORTAL_PORT_HOST:-1111}:${SERVICEPORTAL_PORT_HOST:-1111}
+        # Jupyter server
+        - ${JUPYTER_PORT_HOST:-8888}:${JUPYTER_PORT_HOST:-8888}
         # Syncthing
         - ${SYNCTHING_UI_PORT_HOST:-8384}:${SYNCTHING_UI_PORT_HOST:-8384}
         - ${SYNCTHING_TRANSPORT_PORT_HOST:-22999}:${SYNCTHING_TRANSPORT_PORT_HOST:-22999}
@@ -52,6 +54,9 @@ services:
         - WORKSPACE_SYNC=${WORKSPACE_SYNC:-false}
         - CF_TUNNEL_TOKEN=${CF_TUNNEL_TOKEN:-}
         - CF_QUICK_TUNNELS=${CF_QUICK_TUNNELS:-true}
+        - JUPYTER_PORT_HOST=${JUPYTER_PORT_HOST:-8888}
+        - JUPYTER_METRICS_PORT=${JUPYTER_METRICS_PORT:-28888}
+        - JUPYTER_URL=${JUPYTER_URL:-}
         - WEB_ENABLE_AUTH=${WEB_ENABLE_AUTH:-true}
         - WEB_USER=${WEB_USER:-user}
         - WEB_PASSWORD=${WEB_PASSWORD:-password}
