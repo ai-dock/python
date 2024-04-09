@@ -12,17 +12,21 @@ build_common_main() {
 
 build_common_do_mamba_install_python() {
     $MAMBA_CREATE -n "$1" python="$2"
-    printf "/opt/micromamba/envs/%s/lib\n" "$1" >> /etc/ld.so.conf.d/x86_64-linux-gnu.micromamba.80-python.conf
 }
 
 build_common_install_python() {
     if [[ $PYTHON_VERSION != "all" ]]; then
         build_common_do_mamba_install_python "${PYTHON_MAMBA_NAME}" "${PYTHON_VERSION}"
+        printf "/opt/micromamba/envs/%s/lib\n" "$PYTHON_MAMBA_NAME" >> /etc/ld.so.conf.d/x86_64-linux-gnu.micromamba.80-python.conf
+
     else
         # Multi Python
-        build_common_do_mamba_install "python_310" "3.10"
-        build_common_do_mamba_install "python_311" "3.11"
-        build_common_do_mamba_install "python_312" "3.12"
+        build_common_do_mamba_install_python "python_310" "3.10"
+        printf "/opt/micromamba/envs/python_310/lib\n" >> /etc/ld.so.conf.d/x86_64-linux-gnu.micromamba.80-python.conf
+        build_common_do_mamba_install_python "python_311" "3.11"
+        printf "/opt/micromamba/envs/python_311/lib\n" >> /etc/ld.so.conf.d/x86_64-linux-gnu.micromamba.80-python.conf
+        build_common_do_mamba_install_python "python_312" "3.12"
+        printf "/opt/micromamba/envs/python_312/lib\n" >> /etc/ld.so.conf.d/x86_64-linux-gnu.micromamba.80-python.conf
     fi
 }
 

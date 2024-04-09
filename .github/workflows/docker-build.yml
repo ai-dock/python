@@ -8,9 +8,9 @@ on:
 env:
   UBUNTU_VERSION: 22.04
   BUILDX_NO_DEFAULT_ATTESTATIONS: 1
-  LATEST_CUDA: "3.12-cuda-12.3.1-runtime-22.04"
-  LATEST_ROCM: "3.12-rocm-6.0.2-runtime-22.04"
-  LATEST_CPU: "3.12-cpu-22.04"
+  LATEST_CUDA: "al-cuda-11.8.0-runtime-22.04"
+  LATEST_ROCM: "all-rocm-5.7-runtime-22.04"
+  LATEST_CPU: "all-cpu-22.04"
 
 jobs:
   cpu-base:
@@ -22,7 +22,7 @@ jobs:
           - ["3.10", "python_310"]
           - ["3.11", "python_311"]
           - ["3.12", "python_312"]
-          #- ["all", "python_310"]
+          - ["all", "python_310"]
     steps:
       -
         name: Free Space
@@ -90,7 +90,7 @@ jobs:
           - ["3.10", "python_310"]
           - ["3.11", "python_311"]
           - ["3.12", "python_312"]
-          #- ["all", "python_310"]
+          - ["all", "python_310"]
         cuda:
           - 11.8.0
           - 12.1.0
@@ -166,9 +166,8 @@ jobs:
           - ["3.10", "python_310"]
           - ["3.11", "python_311"]
           - ["3.12", "python_312"]
-          #- ["all", "python_310"]
+          - ["all", "python_310"]
         rocm:
-          - 5.4.2
           - 5.6
           - 5.7
           - 6.0.2
