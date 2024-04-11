@@ -11,34 +11,30 @@ build_common_main() {
 }
 
 build_common_do_mamba_install_python() {
-    $MAMBA_CREATE -n "$1" python="$2"
+    micromamba create -n "$1"
+    micromamba run -n "$1" mamba-skel
+    micromamba install -n "$1" -y python="$2" nano
 }
 
 build_common_install_python() {
     if [[ $PYTHON_VERSION != "all" ]]; then
         build_common_do_mamba_install_python "${PYTHON_MAMBA_NAME}" "${PYTHON_VERSION}"
-        printf "/opt/micromamba/envs/%s/lib\n" "$PYTHON_MAMBA_NAME" >> /etc/ld.so.conf.d/x86_64-linux-gnu.micromamba.80-python.conf
-
     else
         # Multi Python
         build_common_do_mamba_install_python "python_310" "3.10"
-        printf "/opt/micromamba/envs/python_310/lib\n" >> /etc/ld.so.conf.d/x86_64-linux-gnu.micromamba.80-python.conf
         build_common_do_mamba_install_python "python_311" "3.11"
-        printf "/opt/micromamba/envs/python_311/lib\n" >> /etc/ld.so.conf.d/x86_64-linux-gnu.micromamba.80-python.conf
         build_common_do_mamba_install_python "python_312" "3.12"
-        printf "/opt/micromamba/envs/python_312/lib\n" >> /etc/ld.so.conf.d/x86_64-linux-gnu.micromamba.80-python.conf
     fi
 }
 
 build_common_install_jupyter() {
-    $MAMBA_CREATE -n jupyter python=3.10
-    printf "/opt/micromamba/envs/jupyter/lib\n" >> /etc/ld.so.conf.d/x86_64-linux-gnu.micromamba.90-jupyter.conf
-    $MAMBA_INSTALL -n jupyter \
+    micromamba create -n jupyter
+    micromamba run -n jupyter mamba-skel
+    micromamba install -n jupyter -y \
         jupyter \
         jupyterlab \
-        nodejs=20
-    
-    ln -s /opt/micromamba/envs/jupyter/lib/libuv* /opt/ai-dock/lib/micromamba/
+        nodejs=20 \
+        python=3.10
     
     # This must remain clean. User software should not be in this environment
     printf "Removing default ipython kernel...\n"
@@ -46,7 +42,7 @@ build_common_install_jupyter() {
 }
 
 build_common_do_mamba_install_ipykernel() {
-        $MAMBA_INSTALL -n "$1" \
+        micromamba install -n "$1" -y \
             ipykernel \
             ipywidgets
 }
