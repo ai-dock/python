@@ -57,7 +57,7 @@ install_pytorch_cuda() {
     micromamba install -y \
         pytorch=${pytorch_version} torchvision torchaudio \
         python=${python_version} \
-        pytorch-cuda="${CUDA_STRING}"
+        pytorch-cuda="$(cut -d '.' -f 1,2 <<< "${CUDA_VERSION}")"
 }
 
 install_pytorch_rocm() {
