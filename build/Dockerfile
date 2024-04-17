@@ -4,7 +4,7 @@ FROM ${IMAGE_BASE}
 
 LABEL org.opencontainers.image.source https://github.com/ai-dock/python
 
-LABEL org.opencontainers.image.description "Python development environment"
+LABEL org.opencontainers.image.description "Python development environment in a cloud-first docker container"
 
 LABEL maintainer="Rob Ballantyne <rob@dynamedia.uk>"
 
