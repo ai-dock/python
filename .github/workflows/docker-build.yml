@@ -168,8 +168,8 @@ jobs:
           - ["3.12", "python_312"]
           - ["all", "python_310"]
         rocm:
-          - 5.7
-          - 6.0
+          - "5.7"
+          - "6.0"
         level:
           - "core"
           - "runtime"
