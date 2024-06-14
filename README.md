@@ -9,7 +9,7 @@ This image provides a great starting point for python development when used stan
 
 ## Documentation
 
-All AI-Dock containers share a common base which is designed to make running on cloud services such as [vast.ai](https://link.ai-dock.org/vast.ai) and [runpod.io](https://link.ai-dock.org/template) as straightforward and user friendly as possible.
+All AI-Dock containers share a common base which is designed to make running on cloud services such as [vast.ai](https://link.ai-dock.org/vast.ai) and [runpod.io](https://link.ai-dock.org/runpod.io) as straightforward and user friendly as possible.
 
 Common features and options are documented in the [base wiki](https://github.com/ai-dock/base-image/wiki) but any additional features unique to this image will be detailed below.
 
@@ -21,27 +21,31 @@ The `:latest` tag points to `:latest-cuda`
 Tags follow these patterns:
 
 ##### _CUDA_
-- `:[python-version]-cuda-[x.x.x]-[base|runtime|devel]-[ubuntu-version]`
+- `:[python-version]-v2-cuda-[x.x.x]-[base|runtime|devel]-[ubuntu-version]`
 
-- `:latest-cuda` &rarr; `:all-cuda-11.8.0-runtime-22.04`
+- `:latest-cuda` &rarr; `:all-v2-cuda-11.8.0-runtime-22.04`
 
 ##### _ROCm_
-- `:[python-version]-rocm-[x.x.x]-[core|runtime]-[ubuntu-version]`
+- `:[python-version]-v2-rocm-[x.x.x]-[core|runtime]-[ubuntu-version]`
 
-- `:latest-rocm` &rarr; `:all-rocm-5.7-runtime-22.04`
+- `:latest-rocm` &rarr; `:all-v2-rocm-5.7-runtime-22.04`
 
 ROCm builds are experimental. Please give feedback.
 
 ##### _CPU_
-- `:[python-version]-cpu-[ubuntu-version]`
+- `:[python-version]-v2-cpu-[ubuntu-version]`
 
-- `:latest-cpu` &rarr; `:all-cpu-22.04`
+- `:latest-cpu` &rarr; `:all-v2-cpu-22.04`
 
 Browse [here](https://github.com/ai-dock/python/pkgs/container/python) for an image suitable for your target environment.
 
 Supported Python versions: `3.12`, `3.11`, `3.10`
 
 Supported Platforms: `NVIDIA CUDA`, `AMD ROCm`, `CPU`
+
+>[!NOTE]  
+>Recent builds include `v2` in their image tag.  These images use `venv` rather than `micromamba` for environment management.
+
 
 
 ## Pre-Configured Templates

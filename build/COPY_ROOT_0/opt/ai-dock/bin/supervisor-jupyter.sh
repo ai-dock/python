@@ -6,14 +6,21 @@ function cleanup() {
     kill $(jobs -p) > /dev/null 2>&1
     fuser -k -SIGTERM ${LISTEN_PORT}/tcp > /dev/null 2>&1 &
     rm /run/http_ports/$PROXY_PORT > /dev/null 2>&1
+    wait -n
+    if [[ -z "$VIRTUAL_ENV" ]]; then
+        deactivate
+    fi
 }
 
 function start() {
     source /opt/ai-dock/etc/environment.sh
+    source /opt/ai-dock/bin/venv-set.sh serviceportal
+    source /opt/ai-dock/bin/venv-set.sh jupyter
+    set_kernel_paths
+
 
     LISTEN_PORT=18888
     METRICS_PORT=${JUPYTER_METRICS_PORT:-28888}
-    PROXY_SECURE=true
     SERVICE_URL="${JUPYTER_URL:-}"
     QUICKTUNNELS=true
     
@@ -52,7 +59,7 @@ function start() {
     # Delay launch until micromamba is ready
     if [[ -f /run/workspace_sync ]]; then
         printf "Waiting for workspace sync...\n"
-        /usr/bin/python3 /opt/ai-dock/fastapi/logviewer/main.py \
+        "$SERVICEPORTAL_VENV_PYTHON" /opt/ai-dock/fastapi/logviewer/main.py \
             -p $LISTEN_PORT \
             -r 3 \
             -s "${SERVICE_NAME}" \
@@ -76,10 +83,9 @@ function start() {
     fi
 
     printf "\nStarting %s...\n" "${SERVICE_NAME:-service}"
-    
-    # Terminado shell_command needs fixing.
-    # Bash alone invokes neither profile or bashrc.
-    micromamba run -n jupyter jupyter \
+
+    nvm use node
+    "$JUPYTER_VENV/bin/jupyter" \
             $JUPYTER_MODE \
             --allow-root \
             --ip=127.0.0.1 \
@@ -94,8 +100,30 @@ function start() {
             --ServerApp.allow_credentials=True \
             --ServerApp.root_dir=/ \
             --ServerApp.preferred_dir="$WORKSPACE" \
-            --ServerApp.terminado_settings="{'shell_command': ['bash','-c','bash']}" \
             --KernelSpecManager.ensure_native_kernel=False
+}
+
+function set_kernel_paths() {
+    # Define the base directories
+    workspace_dir="${WORKSPACE}environments/python"
+    jupyter_kernels_dir="/usr/local/share/jupyter/kernels"
+
+    # Loop over each directory in the workspace
+    for dir in "$workspace_dir"/*; do
+        if [ -d "$dir" ]; then
+            # Extract the directory name
+            dir_name=$(basename "$dir")
+
+            # Define the search and replacement strings
+            search_string="/opt/environments/python/$dir_name"
+            replace_string="${WORKSPACE}environments/python/$dir_name"
+
+            # Recursively perform the sed replacement in the jupyter kernels directory
+            find "$jupyter_kernels_dir" -type f -exec sudo sed -i "s|$search_string|$replace_string|g" {} +
+
+            echo "Replaced '$search_string' with '$replace_string' in $jupyter_kernels_dir"
+        fi
+    done
 }
 
 start 2>&1
