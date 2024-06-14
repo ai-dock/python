@@ -75,7 +75,7 @@ jobs:
           build-args: |
             IMAGE_BASE=ghcr.io/ai-dock/base-image:v2-cpu-${{ env.UBUNTU_VERSION }}
             PYTHON_VERSION=${{ matrix.python[0] }}
-            PYTHON_MAMBA_NAME=${{ matrix.python[1] }}
+            PYTHON_VENV_NAME=${{ matrix.python[1] }}
           push: true
           # Avoids unknown/unknown architecture and extra metadata
           provenance: false
@@ -152,7 +152,7 @@ jobs:
           build-args: |
             IMAGE_BASE=ghcr.io/ai-dock/base-image:v2-cuda-${{ matrix.cuda }}-${{ matrix.level }}-${{ env.UBUNTU_VERSION }}
             PYTHON_VERSION=${{ matrix.python[0] }}
-            PYTHON_MAMBA_NAME=${{ matrix.python[1] }}
+            PYTHON_VENV_NAME=${{ matrix.python[1] }}
           push: true
           provenance: false
           tags: ${{ env.TAGS }}
@@ -226,7 +226,7 @@ jobs:
           build-args: |
             IMAGE_BASE=ghcr.io/ai-dock/base-image:v2-rocm-${{ matrix.rocm }}-${{ matrix.level }}-${{ env.UBUNTU_VERSION }}
             PYTHON_VERSION=${{ matrix.python[0] }}
-            PYTHON_MAMBA_NAME=${{ matrix.python[1] }}
+            PYTHON_VENV_NAME=${{ matrix.python[1] }}
           push: true
           provenance: false
           tags: ${{ env.TAGS }}
