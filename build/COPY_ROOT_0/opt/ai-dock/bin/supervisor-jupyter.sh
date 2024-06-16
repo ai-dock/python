@@ -84,23 +84,23 @@ function start() {
 
     printf "\nStarting %s...\n" "${SERVICE_NAME:-service}"
 
-    nvm use node
-    "$JUPYTER_VENV/bin/jupyter" \
-            $JUPYTER_MODE \
-            --allow-root \
-            --ip=127.0.0.1 \
-            --port=$LISTEN_PORT \
-            --no-browser \
-            --ServerApp.token='' \
-            --ServerApp.password='' \
-            --ServerApp.trust_xheaders=True \
-            --ServerApp.disable_check_xsrf=False \
-            --ServerApp.allow_remote_access=True \
-            --ServerApp.allow_origin='*' \
-            --ServerApp.allow_credentials=True \
-            --ServerApp.root_dir=/ \
-            --ServerApp.preferred_dir="$WORKSPACE" \
-            --KernelSpecManager.ensure_native_kernel=False
+    source "$JUPYTER_VENV/bin/activate"
+    nvm use default
+    jupyter "$JUPYTER_MODE" \
+        --allow-root \
+        --ip=127.0.0.1 \
+        --port=$LISTEN_PORT \
+        --no-browser \
+        --ServerApp.token='' \
+        --ServerApp.password='' \
+        --ServerApp.trust_xheaders=True \
+        --ServerApp.disable_check_xsrf=False \
+        --ServerApp.allow_remote_access=True \
+        --ServerApp.allow_origin='*' \
+        --ServerApp.allow_credentials=True \
+        --ServerApp.root_dir=/ \
+        --ServerApp.preferred_dir="$WORKSPACE" \
+        --KernelSpecManager.ensure_native_kernel=False
 }
 
 function set_kernel_paths() {

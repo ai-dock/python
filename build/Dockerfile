@@ -8,17 +8,18 @@ LABEL org.opencontainers.image.description "Python development environment in a 
 
 LABEL maintainer="Rob Ballantyne <rob@dynamedia.uk>"
 
-# Add new paths at front 
-#ENV PATH=/opt/another/bin:$PATH
+ENV JUPYTER_VENV=$VENV_DIR/jupyter
+ENV JUPYTER_VENV_PYTHON=$JUPYTER_VENV/bin/python
+ENV JUPYTER_VENV_PIP=$JUPYTER_VENV/bin/pip
 
 # Copy early so we can use scripts in the build - Changes to these files will invalidate the cache and cause a rebuild.
 COPY --chown=0:1111 ./COPY_ROOT_0/ /
 
-# Define the startup mamba environment for interactive sessions.
+# Define the startup environment for interactive sessions.
 # ENV for inheritance
 ARG PYTHON_VERSION=all
 ENV PYTHON_VERSION=${PYTHON_VERSION}
-ARG PYTHON_VENV_NAME=python_312
+ARG PYTHON_VENV_NAME=python_310
 ENV PYTHON_VENV_NAME=${PYTHON_VENV_NAME}
 ENV PYTHON_DEFAULT_VENV=${PYTHON_VENV_NAME}
 ENV OPT_SYNC=$OPT_SYNC

@@ -9,7 +9,7 @@ build_common_main() {
 
 build_common_do_install_python_venv() {
     $APT_INSTALL \
-        "python${2}" \
+        "python${2}-full" \
         "python${2}-dev" \
         "python${2}-venv"
         
@@ -38,18 +38,17 @@ build_common_install_python() {
 
 build_common_install_jupyter() {
     $APT_INSTALL \
-        python3.10 \
+        python3.10-full \
         python3.10-dev \
         python3.10-venv
-    venv="$VENV_DIR/jupyter"
-    python3.10 -m venv "$venv"
-    nvm use node
-    "$venv/bin/pip" install --no-cache-dir \
+    python3.10 -m venv "$JUPYTER_VENV"
+    nvm use default
+    "$JUPYTER_VENV_PIP" install --no-cache-dir \
         jupyterlab \
         notebook
     
     printf "Removing default ipython kernel...\n"
-    rm -rf "$VENV_DIR/jupyter/share/jupyter/kernels/python3"
+    rm -rf "$JUPYTER_VENV/share/jupyter/kernels/python3"
 }
 
 build_common_main "$@"
