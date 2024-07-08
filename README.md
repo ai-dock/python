@@ -23,23 +23,23 @@ Tags follow these patterns:
 ##### _CUDA_
 - `:[python-version]-v2-cuda-[x.x.x]-[base|runtime|devel]-[ubuntu-version]`
 
-- `:latest-cuda` &rarr; `:all-v2-cuda-11.8.0-runtime-22.04`
+- `:latest-cuda` &rarr; `:3.10-v2-cuda-11.8.0-cudnn8-runtime-22.04`
 
 ##### _ROCm_
 - `:[python-version]-v2-rocm-[x.x.x]-[core|runtime]-[ubuntu-version]`
 
-- `:latest-rocm` &rarr; `:all-v2-rocm-5.7-runtime-22.04`
+- `:latest-rocm` &rarr; `:3.10-v2-rocm-6.0-runtime-22.04`
 
 ROCm builds are experimental. Please give feedback.
 
 ##### _CPU_
 - `:[python-version]-v2-cpu-[ubuntu-version]`
 
-- `:latest-cpu` &rarr; `:all-v2-cpu-22.04`
+- `:latest-cpu` &rarr; `:3.10-v2-cpu-22.04`
 
 Browse [here](https://github.com/ai-dock/python/pkgs/container/python) for an image suitable for your target environment.
 
-Supported Python versions: `3.12`, `3.11`, `3.10`
+Supported Python versions: `3.10`
 
 Supported Platforms: `NVIDIA CUDA`, `AMD ROCm`, `CPU`
 
