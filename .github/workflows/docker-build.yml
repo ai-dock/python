@@ -61,7 +61,7 @@ jobs:
         run: |
           img_path_ghcr="ghcr.io/${{ env.REPO_NAMESPACE }}/${{ env.REPO_NAME }}"
           img_path_dhub="${{ secrets.DOCKERHUB_USER }}/${{ env.REPO_NAME }}-cpu"
-          base_tag="v2-cpu-${{ env.UBUNTU_VERSION }}"
+          base_tag="${{ matrix.build.python }}-v2-cpu-${{ env.UBUNTU_VERSION }}"
 
           if [[ ${{ matrix.build.latest }} == "true" ]]; then
               echo "Marking latest"
@@ -112,7 +112,9 @@ jobs:
       -
         name: Env Setter
         run: |
-          echo "PACKAGE_NAME=${GITHUB_REPOSITORY,,}" >> ${GITHUB_ENV}
+          REPO=${GITHUB_REPOSITORY,,}
+          echo "REPO_NAMESPACE=${REPO%%/*}" >> ${GITHUB_ENV}
+          echo "REPO_NAME=${REPO#*/}" >> ${GITHUB_ENV}
       -
         name: Checkout
         uses: actions/checkout@v3
@@ -139,7 +141,7 @@ jobs:
         run: |
           img_path_ghcr="ghcr.io/${{ env.REPO_NAMESPACE }}/${{ env.REPO_NAME }}"
           img_path_dhub="${{ secrets.DOCKERHUB_USER }}/${{ env.REPO_NAME }}-cuda"
-          base_tag="v2-cuda-${{ matrix.python }}-${{ matrix.cuda }}-${{ env.UBUNTU_VERSION }}"
+          base_tag="${{ matrix.build.python }}-v2-cuda-${{ matrix.build.cuda }}-${{ env.UBUNTU_VERSION }}"
 
           if [[ ${{ matrix.build.latest }} == "true" ]]; then
               echo "Marking latest"
@@ -157,7 +159,7 @@ jobs:
         with:
           context: build
           build-args: |
-            IMAGE_BASE=ghcr.io/ai-dock/base-image:v2-cuda-${{ matrix.cuda }}-${{ env.UBUNTU_VERSION }}
+            IMAGE_BASE=ghcr.io/ai-dock/base-image:v2-cuda-${{ matrix.build.cuda }}-${{ env.UBUNTU_VERSION }}
             PYTHON_VERSION=${{ matrix.build.python }}
             PYTHON_VENV_NAME=${{ matrix.build.venv }}
           push: true
@@ -171,9 +173,9 @@ jobs:
       matrix:
         build:
         - {latest: "false", python: "3.10", venv: "python_310", rocm: "6.0-runtime"}
-        - {latest: "false", python: "3.10", venv: "python_310", cuda: "6.0-devel"}
-        - {latest: "false", python: "3.10", venv: "python_310", cuda: "5.7-runtime"}
-        - {latest: "false", python: "3.10", venv: "python_310", cuda: "5.7-devel"}
+        - {latest: "false", python: "3.10", venv: "python_310", rocm: "6.0-devel"}
+        - {latest: "false", python: "3.10", venv: "python_310", rocm: "5.7-runtime"}
+        - {latest: "false", python: "3.10", venv: "python_310", rocm: "5.7-devel"}
     steps:
       -
         name: Free Space
@@ -189,7 +191,9 @@ jobs:
       -
         name: Env Setter
         run: |
-          echo "PACKAGE_NAME=${GITHUB_REPOSITORY,,}" >> ${GITHUB_ENV}
+          REPO=${GITHUB_REPOSITORY,,}
+          echo "REPO_NAMESPACE=${REPO%%/*}" >> ${GITHUB_ENV}
+          echo "REPO_NAME=${REPO#*/}" >> ${GITHUB_ENV}
       -
         name: Checkout
         uses: actions/checkout@v3
@@ -216,7 +220,7 @@ jobs:
         run: |
           img_path_ghcr="ghcr.io/${{ env.REPO_NAMESPACE }}/${{ env.REPO_NAME }}"
           img_path_dhub="${{ secrets.DOCKERHUB_USER }}/${{ env.REPO_NAME }}-rocm"
-          base_tag="v2-cuda-${{ matrix.python }}-${{ matrix.cuda }}-${{ env.UBUNTU_VERSION }}"
+          base_tag="${{ matrix.build.python }}-v2-rocm-${{ matrix.build.rocm }}-${{ env.UBUNTU_VERSION }}"
 
           if [[ ${{ matrix.build.latest }} == "true" ]]; then
               echo "Marking latest"
@@ -234,7 +238,7 @@ jobs:
         with:
           context: build
           build-args: |
-            IMAGE_BASE=ghcr.io/ai-dock/base-image:v2-rocm-${{ matrix.rocm }}-${{ env.UBUNTU_VERSION }}
+            IMAGE_BASE=ghcr.io/ai-dock/base-image:v2-rocm-${{ matrix.build.rocm }}-${{ env.UBUNTU_VERSION }}
             PYTHON_VERSION=${{ matrix.build.python}}
             PYTHON_VENV_NAME=${{ matrix.build.venv }}
           push: true
