@@ -8,9 +8,6 @@ on:
 env:
   UBUNTU_VERSION: 22.04
   BUILDX_NO_DEFAULT_ATTESTATIONS: 1
-  LATEST_CUDA: "3.10-v2-cuda-11.8.0-cudnn8-runtime-22.04"
-  LATEST_ROCM: "3.10-v2-rocm-6.0-runtime-22.04"
-  LATEST_CPU: "3.10-v2-cpu-22.04"
 
 jobs:
   cpu-base:
@@ -18,11 +15,8 @@ jobs:
     strategy:
       fail-fast: false
       matrix:
-        python:
-          - ["3.10", "python_310"]
-          #- ["3.11", "python_311"]
-          #- ["3.12", "python_312"]
-          #- ["all", "python_310"]
+        build:
+        - {latest: "false", python: "3.10", venv: "python_310"}
     steps:
       -
         name: Free Space
@@ -38,19 +32,26 @@ jobs:
       -
         name: Env Setter
         run: |
-          echo "PACKAGE_NAME=${GITHUB_REPOSITORY,,}" >> ${GITHUB_ENV}
+          REPO=${GITHUB_REPOSITORY,,}
+          echo "REPO_NAMESPACE=${REPO%%/*}" >> ${GITHUB_ENV}
+          echo "REPO_NAME=${REPO#*/}" >> ${GITHUB_ENV}
       -
         name: Checkout
         uses: actions/checkout@v3
       -
         name: Permissions fixes
         run: |
-          reponame="$(basename ${GITHUB_REPOSITORY})"
-          target="${HOME}/work/${reponame}/${reponame}/build/COPY*"
+          target="${HOME}/work/${{ env.REPO_NAME }}/${{ env.REPO_NAME }}/build/COPY*"
           chmod -R ug+rwX ${target}
       -
+        name: Login to DockerHub
+        uses: docker/login-action@v3
+        with:
+          username: ${{ env.DOCKERHUB_USER }}
+          password: ${{ secrets.DOCKERHUB_TOKEN }}
+      -
         name: Login to GitHub Container Registry
-        uses: docker/login-action@v2
+        uses: docker/login-action@v3
         with:
           registry: ghcr.io
           username: ${{ github.actor }}
@@ -58,13 +59,18 @@ jobs:
       -
         name: Set tags
         run: |
-          img_path="ghcr.io/${{ env.PACKAGE_NAME }}"
-          ver_tag="${{ matrix.python[0] }}-v2-cpu-${{ env.UBUNTU_VERSION }}"
-          
-          if [[ $ver_tag == ${{ env.LATEST_CPU }} ]]; then
-              TAGS="${img_path}:latest-cpu, ${img_path}:$ver_tag"
-          else
-              TAGS="${img_path}:$ver_tag"
+          img_path_ghcr="ghcr.io/${{ env.REPO_NAMESPACE }}/${{ env.REPO_NAME }}"
+          img_path_dhub="${{ secrets.DOCKERHUB_USER }}/${{ env.REPO_NAME }}-cpu"
+          base_tag="v2-cpu-${{ env.UBUNTU_VERSION }}"
+
+          if [[ ${{ matrix.build.latest }} == "true" ]]; then
+              echo "Marking latest"
+              # GHCR.io Tags
+              TAGS="${img_path_ghcr}:${base_tag}, ${img_path_ghcr}:latest-cpu"
+              # Docker.io tags
+              TAGS="${TAGS}, ${img_path_dhub}:${base_tag}, ${img_path_dhub}:latest"
+          else  
+              TAGS="${img_path_ghcr}:${base_tag}, ${img_path_dhub}:${base_tag}"
           fi
           echo "TAGS=${TAGS}" >> ${GITHUB_ENV}
       -
@@ -74,8 +80,8 @@ jobs:
           context: build
           build-args: |
             IMAGE_BASE=ghcr.io/ai-dock/base-image:v2-cpu-${{ env.UBUNTU_VERSION }}
-            PYTHON_VERSION=${{ matrix.python[0] }}
-            PYTHON_VENV_NAME=${{ matrix.python[1] }}
+            PYTHON_VERSION=${{ matrix.build.python }}
+            PYTHON_VENV_NAME=${{ matrix.build.venv }}
           push: true
           # Avoids unknown/unknown architecture and extra metadata
           provenance: false
@@ -86,19 +92,11 @@ jobs:
     strategy:
       fail-fast: false
       matrix:
-        python:
-          - ["3.10", "python_310"]
-          #- ["3.11", "python_311"]
-          #- ["3.12", "python_312"]
-          #- ["all", "python_310"]
-        cuda:
-          - 11.8.0
-          - 12.1.1
-
-        level:
-          - "base"
-          - "cudnn8-runtime"
-          - "cudnn8-devel"
+        build:
+        - {latest: "false", python: "3.10", venv: "python_310", cuda: "11.8.0-cudnn8-runtime"}
+        - {latest: "false", python: "3.10", venv: "python_310", cuda: "11.8.0-cudnn8-devel"}
+        - {latest: "false", python: "3.10", venv: "python_310", cuda: "12.1.1-cudnn8-runtime"}
+        - {latest: "false", python: "3.10", venv: "python_310", cuda: "12.1.1-cudnn8-devel"}
     steps:
       -
         name: Free Space
@@ -121,12 +119,17 @@ jobs:
       -
         name: Permissions fixes
         run: |
-          reponame="$(basename ${GITHUB_REPOSITORY})"
-          target="${HOME}/work/${reponame}/${reponame}/build/COPY*"
+          target="${HOME}/work/${{ env.REPO_NAME }}/${{ env.REPO_NAME }}/build/COPY*"
           chmod -R ug+rwX ${target}
       -
+        name: Login to DockerHub
+        uses: docker/login-action@v3
+        with:
+          username: ${{ env.DOCKERHUB_USER }}
+          password: ${{ secrets.DOCKERHUB_TOKEN }}
+      -
         name: Login to GitHub Container Registry
-        uses: docker/login-action@v2
+        uses: docker/login-action@v3
         with:
           registry: ghcr.io
           username: ${{ github.actor }}
@@ -134,13 +137,18 @@ jobs:
       -
         name: Set tags
         run: |
-          img_path="ghcr.io/${{ env.PACKAGE_NAME }}"
-          ver_tag="${{ matrix.python[0] }}-v2-cuda-${{ matrix.cuda }}-${{ matrix.level }}-${{ env.UBUNTU_VERSION }}"
-          
-          if [[ $ver_tag == ${{ env.LATEST_CUDA }} ]]; then
-              TAGS="${img_path}:latest, ${img_path}:latest-cuda, ${img_path}:$ver_tag"
-          else
-              TAGS="${img_path}:$ver_tag"
+          img_path_ghcr="ghcr.io/${{ env.REPO_NAMESPACE }}/${{ env.REPO_NAME }}"
+          img_path_dhub="${{ secrets.DOCKERHUB_USER }}/${{ env.REPO_NAME }}-cuda"
+          base_tag="v2-cuda-${{ matrix.python }}-${{ matrix.cuda }}-${{ env.UBUNTU_VERSION }}"
+
+          if [[ ${{ matrix.build.latest }} == "true" ]]; then
+              echo "Marking latest"
+              # GHCR.io Tags
+              TAGS="${img_path_ghcr}:${base_tag}, ${img_path_ghcr}:latest-cuda, ${img_path_ghcr}:latest"
+              # Docker.io Tags
+              TAGS="${TAGS}, ${img_path_dhub}:${base_tag}, ${img_path_dhub}:latest"
+          else  
+              TAGS="${img_path_ghcr}:${base_tag}, ${img_path_dhub}:${base_tag}"
           fi
           echo "TAGS=${TAGS}" >> ${GITHUB_ENV}
       -
@@ -149,9 +157,9 @@ jobs:
         with:
           context: build
           build-args: |
-            IMAGE_BASE=ghcr.io/ai-dock/base-image:v2-cuda-${{ matrix.cuda }}-${{ matrix.level }}-${{ env.UBUNTU_VERSION }}
-            PYTHON_VERSION=${{ matrix.python[0] }}
-            PYTHON_VENV_NAME=${{ matrix.python[1] }}
+            IMAGE_BASE=ghcr.io/ai-dock/base-image:v2-cuda-${{ matrix.cuda }}-${{ env.UBUNTU_VERSION }}
+            PYTHON_VERSION=${{ matrix.build.python }}
+            PYTHON_VENV_NAME=${{ matrix.build.venv }}
           push: true
           provenance: false
           tags: ${{ env.TAGS }}
@@ -161,18 +169,11 @@ jobs:
     strategy:
       fail-fast: false
       matrix:
-        python:
-          - ["3.10", "python_310"]
-          #- ["3.11", "python_311"]
-          #- ["3.12", "python_312"]
-          #- ["all", "python_310"]
-        rocm:
-          - "5.7"
-          - "6.0"
-        level:
-          - "core"
-          - "runtime"
-          - "devel"
+        build:
+        - {latest: "false", python: "3.10", venv: "python_310", rocm: "6.0-runtime"}
+        - {latest: "false", python: "3.10", venv: "python_310", cuda: "6.0-devel"}
+        - {latest: "false", python: "3.10", venv: "python_310", cuda: "5.7-runtime"}
+        - {latest: "false", python: "3.10", venv: "python_310", cuda: "5.7-devel"}
     steps:
       -
         name: Free Space
@@ -195,12 +196,17 @@ jobs:
       -
         name: Permissions fixes
         run: |
-          reponame="$(basename ${GITHUB_REPOSITORY})"
-          target="${HOME}/work/${reponame}/${reponame}/build/COPY*"
+          target="${HOME}/work/${{ env.REPO_NAME }}/${{ env.REPO_NAME }}/build/COPY*"
           chmod -R ug+rwX ${target}
       -
+        name: Login to DockerHub
+        uses: docker/login-action@v3
+        with:
+          username: ${{ env.DOCKERHUB_USER }}
+          password: ${{ secrets.DOCKERHUB_TOKEN }}
+      -
         name: Login to GitHub Container Registry
-        uses: docker/login-action@v2
+        uses: docker/login-action@v3
         with:
           registry: ghcr.io
           username: ${{ github.actor }}
@@ -208,13 +214,18 @@ jobs:
       -
         name: Set tags
         run: |
-          img_path="ghcr.io/${{ env.PACKAGE_NAME }}"
-          ver_tag="${{ matrix.python[0] }}-v2-rocm-${{ matrix.rocm }}-${{ matrix.level }}-${{ env.UBUNTU_VERSION }}"
-          
-          if [[ $ver_tag == ${{ env.LATEST_ROCM }} ]]; then
-              TAGS="${img_path}:latest-rocm, ${img_path}:$ver_tag"
-          else
-              TAGS="${img_path}:$ver_tag"
+          img_path_ghcr="ghcr.io/${{ env.REPO_NAMESPACE }}/${{ env.REPO_NAME }}"
+          img_path_dhub="${{ secrets.DOCKERHUB_USER }}/${{ env.REPO_NAME }}-rocm"
+          base_tag="v2-cuda-${{ matrix.python }}-${{ matrix.cuda }}-${{ env.UBUNTU_VERSION }}"
+
+          if [[ ${{ matrix.build.latest }} == "true" ]]; then
+              echo "Marking latest"
+              # GHCR.io Tags
+              TAGS="${img_path_ghcr}:${base_tag}, ${img_path_ghcr}:latest-rocm"
+              # Docker.io Tags
+              TAGS="${TAGS}, ${img_path_dhub}:${base_tag}, ${img_path_dhub}:latest"
+          else  
+              TAGS="${img_path_ghcr}:${base_tag}, ${img_path_dhub}:${base_tag}"
           fi
           echo "TAGS=${TAGS}" >> ${GITHUB_ENV}
       -
@@ -223,9 +234,9 @@ jobs:
         with:
           context: build
           build-args: |
-            IMAGE_BASE=ghcr.io/ai-dock/base-image:v2-rocm-${{ matrix.rocm }}-${{ matrix.level }}-${{ env.UBUNTU_VERSION }}
-            PYTHON_VERSION=${{ matrix.python[0] }}
-            PYTHON_VENV_NAME=${{ matrix.python[1] }}
+            IMAGE_BASE=ghcr.io/ai-dock/base-image:v2-rocm-${{ matrix.rocm }}-${{ env.UBUNTU_VERSION }}
+            PYTHON_VERSION=${{ matrix.build.python}}
+            PYTHON_VENV_NAME=${{ matrix.build.venv }}
           push: true
           provenance: false
           tags: ${{ env.TAGS }}

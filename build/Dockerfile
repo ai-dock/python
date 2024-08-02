@@ -1,5 +1,5 @@
 # For build automation - Allows building from any ai-dock base image
-ARG IMAGE_BASE="ghcr.io/ai-dock/base-image:v2-cuda-11.8.0-base-22.04"
+ARG IMAGE_BASE="ghcr.io/ai-dock/base-image:v2-cuda-12.1.1-base-22.04"
 FROM ${IMAGE_BASE}
 
 LABEL org.opencontainers.image.source https://github.com/ai-dock/python
