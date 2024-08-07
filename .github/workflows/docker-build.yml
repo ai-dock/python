@@ -93,12 +93,16 @@ jobs:
       fail-fast: false
       matrix:
         build:
-        - {latest: "false", python: "3.10", venv: "python_310", cuda: "11.8.0-base"}
-        - {latest: "false", python: "3.10", venv: "python_310", cuda: "11.8.0-cudnn8-runtime"}
-        - {latest: "false", python: "3.10", venv: "python_310", cuda: "11.8.0-cudnn8-devel"}
+        - {latest: "false", python: "3.10", venv: "python_310", cuda: "12.4.1-base"}
+        - {latest: "false", python: "3.10", venv: "python_310", cuda: "12.4.1-cudnn-runtime"}
+        - {latest: "false", python: "3.10", venv: "python_310", cuda: "12.4.1-cudnn-devel"}
         - {latest: "false", python: "3.10", venv: "python_310", cuda: "12.1.1-base"}
         - {latest: "false", python: "3.10", venv: "python_310", cuda: "12.1.1-cudnn8-runtime"}
         - {latest: "false", python: "3.10", venv: "python_310", cuda: "12.1.1-cudnn8-devel"}
+        - {latest: "false", python: "3.10", venv: "python_310", cuda: "11.8.0-base"}
+        - {latest: "false", python: "3.10", venv: "python_310", cuda: "11.8.0-cudnn8-runtime"}
+        - {latest: "false", python: "3.10", venv: "python_310", cuda: "11.8.0-cudnn8-devel"}
+        
     steps:
       -
         name: Free Space
@@ -177,9 +181,6 @@ jobs:
         - {latest: "false", python: "3.10", venv: "python_310", rocm: "6.0-core"}
         - {latest: "false", python: "3.10", venv: "python_310", rocm: "6.0-runtime"}
         - {latest: "false", python: "3.10", venv: "python_310", rocm: "6.0-devel"}
-        - {latest: "false", python: "3.10", venv: "python_310", rocm: "5.7-core"}
-        - {latest: "false", python: "3.10", venv: "python_310", rocm: "5.7-runtime"}
-        - {latest: "false", python: "3.10", venv: "python_310", rocm: "5.7-devel"}
     steps:
       -
         name: Free Space
