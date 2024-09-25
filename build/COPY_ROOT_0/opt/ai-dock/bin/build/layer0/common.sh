@@ -3,6 +3,7 @@
 source /opt/ai-dock/etc/environment.sh
 
 build_common_main() {
+    apt update
     build_common_install_python
     build_common_install_jupyter
 }
