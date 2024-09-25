@@ -30,7 +30,7 @@ function start() {
     PROXY_PORT=$JUPYTER_PORT
     
     if [[ ! -v JUPYTER_MODE || -z $JUPYTER_MODE ]]; then
-        JUPYTER_MODE="notebook"
+        JUPYTER_MODE=${JUPYTER_TYPE:-"notebook"}
     fi
     if [[ $JUPYTER_MODE != "notebook" ]]; then
         JUPYTER_MODE="lab"
